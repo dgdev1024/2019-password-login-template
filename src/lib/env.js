@@ -28,12 +28,22 @@ if (process.env.NODE_ENV === 'development') {
  * Throws an exception if no such variable is found.
  *
  * @param {string} key The environment variable's string key.
+ * @param {string[]} values An array of required values.
  */
-const checkRequiredEnv = key => {
+const checkRequiredEnv = (key, values = []) => {
   if (!process.env[key]) {
     throw new Error(
       `A required environment variable, '${key}', was not found.`
     );
+  }
+
+  if (Array.isArray(values) && values.length > 0) {
+    const matches = values.filter(v => process.env[key] === v);
+    if (matches.length === 0) {
+      throw new Error(
+        `The environment variable, '${key}', has been set to an invalid value.`
+      );
+    }
   }
 };
 
@@ -51,6 +61,8 @@ const loadDefaultEnv = (key, value) => {
 // Check for required environment variables here.
 checkRequiredEnv('NODE_ENV');
 checkRequiredEnv('DATABASE_URI');
+checkRequiredEnv('EMAIL_TRANSPORT_METHOD', ['oauth2', 'userpass', 'local']);
+checkRequiredEnv('JWT_SECRET');
 
 // Load default environment variables here.
 loadDefaultEnv('PORT', 3000);
