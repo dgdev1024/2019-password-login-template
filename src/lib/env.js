@@ -70,3 +70,4 @@ loadDefaultEnv('FORCE_HTTPS', true);
 loadDefaultEnv('SITE_URI', `http://localhost:${process.env.PORT}`);
 loadDefaultEnv('SITE_TITLE', 'The Website');
 loadDefaultEnv('SITE_AUTHOR', 'The Website Author');
+loadDefaultEnv('MAX_LOGIN_ATTEMPTS', 3);

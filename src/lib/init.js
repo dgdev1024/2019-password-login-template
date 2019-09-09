@@ -26,7 +26,8 @@ process.on('unhandledRejection', err => {
   // Connect to database.
   log.info('Connecting to database...');
   await mongoose.connect(process.env.DATABASE_URI, {
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useCreateIndex: true
   });
 
   // Start the server.

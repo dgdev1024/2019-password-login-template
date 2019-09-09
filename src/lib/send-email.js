@@ -142,7 +142,7 @@ module.exports = {
       <div>
         <h1>{{siteTitle}}</h1>
         <p>
-          Hello, {{name}}!<br /><br />
+          Hello, {{email}}!<br /><br />
           Click on the following link to verify your new account:<br /><br />
           <a href="{{verifyEndpoint}}?email={{email}}&slug={{slug}}">
             {{verifyEndpoint}}?email={{email}}&slug={{slug}}

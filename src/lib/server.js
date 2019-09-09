@@ -9,6 +9,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
+const passport = require('passport');
 const forceHttps = require('./force-https');
 const { handleRouteError } = require('./error');
 const log = require('./log');
@@ -23,6 +24,12 @@ const start = () => {
   app.use(cors());
   app.use(helmet());
   app.use(compression());
+  app.use(passport.initialize());
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: false }));
+
+  // API Routing
+  app.use('/api/user', require('../routes/user'));
 
   // Handle Route Errors
   app.use(handleRouteError);
