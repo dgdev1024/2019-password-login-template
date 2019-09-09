@@ -1,0 +1,41 @@
+{
+  "name": "2019-password-login-template",
+  "version": "1.0.0",
+  "description": "A template that can be used to build a web application backend featuring a password-based login system.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "NODE_ENV=production node src/index.js",
+    "dev": "NODE_ENV=development nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dgdev1024/2019-password-login-template.git"
+  },
+  "keywords": [
+    "password",
+    "login",
+    "template",
+    "Node.JS"
+  ],
+  "author": "Dennis Griffin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dgdev1024/2019-password-login-template/issues"
+  },
+  "homepage": "https://github.com/dgdev1024/2019-password-login-template#readme",
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "cli-color": "^1.4.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "helmet": "^3.20.0",
+    "http-status-codes": "^1.3.2",
+    "moment": "^2.24.0",
+    "mongoose": "^5.6.8",
+    "node-env-file": "^0.1.8"
+  }
+}
