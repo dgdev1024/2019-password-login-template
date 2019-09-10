@@ -7,6 +7,8 @@
 // Imports
 const passport = require('passport');
 const userModel = require('../models/user');
+const passTokenModel = require('../models/password-token');
+const emailTokenModel = require('../models/email-token');
 const validate = require('../lib/validate');
 const { localLoginStrategy } = require('../lib/auth');
 const { getIpAddress } = require('../lib/ip');
@@ -42,6 +44,18 @@ const register = async req => {
       'There were issues validating your user details.',
       validationErrors
     );
+  }
+
+  // Make sure another user isn't trying to change their account email to the
+  // email address given.
+  const existingEmailToken = await emailTokenModel.findOne({
+    newEmailAddress: emailAddress,
+    authenticated: false
+  });
+  if (existingEmailToken) {
+    return raiseError(409, 'This email address is temporarly unavailable.', [
+      ['emailAddress', 'This email address is temporarly unavailable.']
+    ]);
   }
 
   // Make sure there isn't another user with the given email address.
@@ -183,6 +197,8 @@ const remove = async req => {
     return raiseError(400, 'Account deletion requires explicit consent.');
   }
 
+  await passTokenModel.remove({ emailAddress: user.emailAddress });
+  await emailTokenModel.remove({ emailAddress: user.emailAddress });
   await user.remove();
   return { message: 'Your account has been deleted.' };
 };

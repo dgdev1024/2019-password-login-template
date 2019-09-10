@@ -79,7 +79,7 @@ const createEmailFunction = config => {
    * @param {string} email The email address to send to.
    * @param {object} params Our parameters to parse the email template with.
    */
-  return async (email, params) => {
+  return async (email, params = {}) => {
     // Make a copy of the email subject and body for parsing.
     let formattedSubject = subject;
     let formattedBody = body;
@@ -169,6 +169,51 @@ module.exports = {
           Click on the following link to verify your password change:<br /><br />
           <a href="{{verifyEndpoint}}?email={{email}}&slug={{slug}}">
             {{verifyEndpoint}}?email={{email}}&slug={{slug}}
+          </a><br /><br />
+          - {{siteAuthor}}
+        </p>
+      </div>
+    `
+  }),
+
+  emailChangeRequested: createEmailFunction({
+    params: {
+      siteTitle: process.env.SITE_TITLE,
+      siteAuthor: process.env.SITE_AUTHOR
+    },
+    subject: '{{siteTitle}} - Email Change Requested',
+    body: `
+      <div>
+        <h1>{{siteTitle}}</h1>
+        <p>
+          Hello, {{email}}!<br /><br />
+          You are receiving this email because your account has requested a
+          change in its associated email address. If you made this request,
+          then you may safely ignore this email. Otherwise, please reply to
+          this email.
+          </a><br /><br />
+          - {{siteAuthor}}
+        </p>
+      </div>
+    `
+  }),
+
+  verifyEmailChange: createEmailFunction({
+    params: {
+      siteTitle: process.env.SITE_TITLE,
+      siteAuthor: process.env.SITE_AUTHOR,
+      verifyEndpoint: `${process.env.SITE_URI}/api/user/verify-change-email`
+    },
+    subject: '{{siteTitle}} - Verify Email Change',
+    body: `
+      <div>
+        <h1>{{siteTitle}}</h1>
+        <p>
+          Hello, {{email}}!<br /><br />
+          Click on the following link to verify your new email change:<br /><br />
+          <a href="{{verifyEndpoint}}?slug={{slug}}">
+            {{verifyEndpoint}}?slug={{slug}}
+          </a>
           </a><br /><br />
           - {{siteAuthor}}
         </p>

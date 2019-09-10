@@ -8,6 +8,7 @@
 const express = require('express');
 const user = require('../controllers/user');
 const passToken = require('../controllers/password-token');
+const emailToken = require('../controllers/email-token');
 const auth = require('../lib/auth');
 
 // Express Router
@@ -24,6 +25,17 @@ router.delete('/delete', auth.requireLoginToken, user.remove);
 router.post('/request-change-password', passToken.request);
 router.get('/verify-change-password', passToken.authenticate);
 router.post('/change-password', passToken.changePassword);
+
+router.post(
+  '/request-change-email',
+  auth.requireLoginToken,
+  emailToken.request
+);
+router.get(
+  '/verify-change-email',
+  auth.requireLoginToken,
+  emailToken.authenticate
+);
 
 // Exports
 module.exports = router;
