@@ -49,7 +49,7 @@ switch (transportMethod) {
 }
 
 // A sender string to send along with our emails.
-const senderString = `${process.env.EMAIL_TRANSPORT_NAME} <${process.env.EMAIL_TRANSPORT_ADDRESS}>`;
+const senderString = `${process.env.SITE_AUTHOR} <${process.env.EMAIL_TRANSPORT_ADDRESS}>`;
 
 // Create the email transport.
 const emailTransport = nodemailer.createTransport(transportConfig);
@@ -135,6 +135,7 @@ module.exports = {
   verifyAccount: createEmailFunction({
     params: {
       siteTitle: process.env.SITE_TITLE,
+      siteAuthor: process.env.SITE_AUTHOR,
       verifyEndpoint: `${process.env.SITE_URI}/api/user/verify`
     },
     subject: '{{siteTitle}} - Verify New Account',
@@ -146,7 +147,30 @@ module.exports = {
           Click on the following link to verify your new account:<br /><br />
           <a href="{{verifyEndpoint}}?email={{email}}&slug={{slug}}">
             {{verifyEndpoint}}?email={{email}}&slug={{slug}}
-          </a>
+          </a><br /><br />
+          - {{siteAuthor}}
+        </p>
+      </div>
+    `
+  }),
+
+  verifyChangePassword: createEmailFunction({
+    params: {
+      siteTitle: process.env.SITE_TITLE,
+      siteAuthor: process.env.SITE_AUTHOR,
+      verifyEndpoint: `${process.env.SITE_URI}/api/user/verify-change-password`
+    },
+    subject: '{{siteTitle}} - Verify Password Reset',
+    body: `
+      <div>
+        <h1>{{siteTitle}}</h1>
+        <p>
+          Hello, {{email}}!<br /><br />
+          Click on the following link to verify your password change:<br /><br />
+          <a href="{{verifyEndpoint}}?email={{email}}&slug={{slug}}">
+            {{verifyEndpoint}}?email={{email}}&slug={{slug}}
+          </a><br /><br />
+          - {{siteAuthor}}
         </p>
       </div>
     `

@@ -45,9 +45,11 @@ const handleRouteError = (err, req, res, next) => {
  * @param {string[]} details Strings detailing the error.
  * @return {{ error: { status: number, message: string, details: string[] }}} The error object.
  */
-const raiseError = (status, message, details = []) => ({
-  error: { status, message, details }
-});
+const raiseError = (status, message, details = []) => {
+  return {
+    error: { status, message, details }
+  };
+};
 
 // Exports
 module.exports = {
