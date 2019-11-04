@@ -130,13 +130,20 @@ const createEmailFunction = config => {
   };
 };
 
+// Should links in our emails point directly to our backend API, or to
+// our external frontend?
+const endpointUriStart =
+  process.env.USING_EXTERNAL_FRONTEND === 'true' ?
+    `${process.env.SITE_FRONTEND_URI}` :
+    `${process.env.SITE_URI}/api`;
+
 // Exports
 module.exports = {
   verifyAccount: createEmailFunction({
     params: {
       siteTitle: process.env.SITE_TITLE,
       siteAuthor: process.env.SITE_AUTHOR,
-      verifyEndpoint: `${process.env.SITE_URI}/api/user/verify`
+      verifyEndpoint: `${endpointUriStart}/user/verify`
     },
     subject: '{{siteTitle}} - Verify New Account',
     body: `
@@ -145,8 +152,8 @@ module.exports = {
         <p>
           Hello, {{email}}!<br /><br />
           Click on the following link to verify your new account:<br /><br />
-          <a href="{{verifyEndpoint}}?email={{email}}&slug={{slug}}">
-            {{verifyEndpoint}}?email={{email}}&slug={{slug}}
+          <a href="{{verifyEndpoint}}?emailAddress={{email}}&slug={{slug}}">
+            {{verifyEndpoint}}?emailAddress={{email}}&slug={{slug}}
           </a><br /><br />
           - {{siteAuthor}}
         </p>
@@ -158,7 +165,7 @@ module.exports = {
     params: {
       siteTitle: process.env.SITE_TITLE,
       siteAuthor: process.env.SITE_AUTHOR,
-      verifyEndpoint: `${process.env.SITE_URI}/api/user/verify-change-password`
+      verifyEndpoint: `${endpointUriStart}/user/verify-change-password`
     },
     subject: '{{siteTitle}} - Verify Password Reset',
     body: `
@@ -167,8 +174,8 @@ module.exports = {
         <p>
           Hello, {{email}}!<br /><br />
           Click on the following link to verify your password change:<br /><br />
-          <a href="{{verifyEndpoint}}?email={{email}}&slug={{slug}}">
-            {{verifyEndpoint}}?email={{email}}&slug={{slug}}
+          <a href="{{verifyEndpoint}}?emailAddress={{email}}&slug={{slug}}">
+            {{verifyEndpoint}}?emailAddress={{email}}&slug={{slug}}
           </a><br /><br />
           - {{siteAuthor}}
         </p>
@@ -202,7 +209,7 @@ module.exports = {
     params: {
       siteTitle: process.env.SITE_TITLE,
       siteAuthor: process.env.SITE_AUTHOR,
-      verifyEndpoint: `${process.env.SITE_URI}/api/user/verify-change-email`
+      verifyEndpoint: `${endpointUriStart}/user/verify-change-email`
     },
     subject: '{{siteTitle}} - Verify Email Change',
     body: `

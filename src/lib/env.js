@@ -55,7 +55,7 @@ const checkRequiredEnv = (key, values = []) => {
  * @param {string} value A default value to load if the variable is not found.
  */
 const loadDefaultEnv = (key, value) => {
-  process.env[key] = process.env[key] || value;
+  process.env[key] = process.env[key] || value.toString();
 };
 
 // Check for required environment variables here.
@@ -63,6 +63,11 @@ checkRequiredEnv('NODE_ENV');
 checkRequiredEnv('DATABASE_URI');
 checkRequiredEnv('EMAIL_TRANSPORT_METHOD', ['oauth2', 'userpass', 'local']);
 checkRequiredEnv('JWT_SECRET');
+checkRequiredEnv('USING_EXTERNAL_FRONTEND');
+
+if (process.env.USING_EXTERNAL_FRONTEND === 'true') {
+  checkRequiredEnv('SITE_FRONTEND_URI');
+}
 
 // Load default environment variables here.
 loadDefaultEnv('PORT', 3000);

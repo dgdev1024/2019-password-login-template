@@ -69,17 +69,17 @@ const request = async req => {
  */
 const authenticate = async req => {
   // Get the email and slug from the request query.
-  const { email, slug } = req.query;
+  const { emailAddress, slug } = req.query;
 
   // Make sure the email provided resolves to a user account.
-  const user = await userModel.findOne({ emailAddress: email, verified: true });
+  const user = await userModel.findOne({ emailAddress, verified: true });
   if (!user) {
     return raiseError(404, 'Authentication unsuccessful.');
   }
 
   // Next, make sure the email resolves to an unauthenticated password token.
   const token = await passTokenModel.findOne({
-    emailAddress: email,
+    emailAddress,
     authenticated: false,
     spent: false
   });
@@ -111,14 +111,14 @@ const authenticate = async req => {
  */
 const changePassword = async req => {
   // Get the email address, password, and confirmed password.
-  const { email } = req.query;
+  const { emailAddress } = req.query;
   const { password, confirm } = req.body;
 
   // Validate the user's new password.
   const validationErrors = [validate.password(password, confirm)].filter(
     v => !!v
   );
-  if (validationErrors > 0) {
+  if (validationErrors.length > 0) {
     return raiseError(
       400,
       'There were issues validating your password',
@@ -127,14 +127,14 @@ const changePassword = async req => {
   }
 
   // Make sure the email provided resolves to a user account.
-  const user = await userModel.findOne({ emailAddress: email, verified: true });
+  const user = await userModel.findOne({ emailAddress, verified: true });
   if (!user) {
     return raiseError(404, 'Password change unsuccessful.');
   }
 
   // Next, make sure the email resolves to an authenticated password token.
   const token = await passTokenModel.findOne({
-    emailAddress: email,
+    emailAddress,
     authenticated: true,
     spent: false
   });

@@ -8,8 +8,10 @@
 const regex = {
   symbols: /[$-/:-?{-~!"^_`\[\]!@]/,
   letters: /[a-zA-Z]/,
+  lowercases: /[a-z]/,
   capitals: /[A-Z]/,
   numbers: /[0-9]/,
+  objectIds: /^[a-f\d]{24}$/i,
   emails: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 };
 
@@ -28,7 +30,7 @@ const createNameValidator = (field, which) => name => {
     return [
       field,
       `Your ${which} must contain between ${limits.name.min} and ${
-        limits.name.max
+      limits.name.max
       } characters.`
     ];
   }
@@ -67,13 +69,13 @@ const password = (password, confirm) => {
     return [
       'password',
       `Your password must contain between ${limits.password.min} and ${
-        limits.password.max
+      limits.password.max
       } characters.`
     ];
   }
 
   if (
-    regex.letters.test(password) === false ||
+    regex.lowercases.test(password) === false ||
     regex.capitals.test(password) === false ||
     regex.numbers.test(password) === false ||
     regex.symbols.test(password) === false
@@ -85,11 +87,19 @@ const password = (password, confirm) => {
   }
 
   if (typeof confirm !== 'string' || confirm.length === 0) {
-    return ['password', 'Please confirm your password.'];
+    return ['confirm', 'Please confirm your password.'];
   }
 
   if (password !== confirm) {
-    return ['password', 'The passwords do not match.'];
+    return ['confirm', 'The passwords do not match.'];
+  }
+
+  return null;
+};
+
+const consent = con => {
+  if (typeof con !== 'boolean' || con === false) {
+    return ['consent', 'You must provide consent.'];
   }
 
   return null;
@@ -101,5 +111,6 @@ module.exports = {
   firstName: createNameValidator('firstName', 'first name'),
   lastName: createNameValidator('lastName', 'last name'),
   emailAddress,
-  password
+  password,
+  consent
 };

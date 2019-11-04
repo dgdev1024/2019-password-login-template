@@ -29,12 +29,13 @@ passport.use('local-login', localLoginStrategy);
  */
 const register = async req => {
   // Get the user's input from the request body.
-  const { emailAddress, password, confirm } = req.body;
+  const { emailAddress, password, confirm, consent } = req.body;
 
   // Attempt to validate the user's inputs.
   const validationErrors = [
     validate.emailAddress(emailAddress),
-    validate.password(password, confirm)
+    validate.password(password, confirm),
+    validate.consent(consent)
   ].filter(err => !!err);
 
   // Why didn't I think of this before? Thanks, Codewars!
@@ -98,14 +99,14 @@ const register = async req => {
 const verify = async req => {
   // Get the verification slug from the request query, and the encoded
   // verification nonce from the request body.
-  const { email, slug } = req.query;
+  const { emailAddress, slug } = req.query;
 
   // Also, get the verifying user's IP address.
   const ipAddress = getIpAddress(req);
 
   // Find an un-verified user with the verification slug provided.
   const user = await userModel.findOne({
-    emailAddress: email,
+    emailAddress,
     verified: false
   });
   if (!user) {
@@ -197,8 +198,8 @@ const remove = async req => {
     return raiseError(400, 'Account deletion requires explicit consent.');
   }
 
-  await passTokenModel.remove({ emailAddress: user.emailAddress });
-  await emailTokenModel.remove({ emailAddress: user.emailAddress });
+  await passTokenModel.deleteMany({ emailAddress: user.emailAddress });
+  await emailTokenModel.deleteMany({ emailAddress: user.emailAddress });
   await user.remove();
   return { message: 'Your account has been deleted.' };
 };

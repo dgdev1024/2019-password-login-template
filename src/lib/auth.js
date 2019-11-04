@@ -10,6 +10,7 @@ const jwt = require('jsonwebtoken');
 const userModel = require('../models/user');
 const { asyncMiddleware, asyncPassportLocal } = require('./async-wrap');
 const { raiseError } = require('./error');
+const validate = require('./validate');
 
 // Login strategy for logging in via username and password.
 const localLoginStrategy = new passportLocal.Strategy(
@@ -18,6 +19,15 @@ const localLoginStrategy = new passportLocal.Strategy(
     session: false
   },
   asyncPassportLocal(async (emailAddress, password) => {
+    // Validate the submitted credentials.
+    const validationErrors = [
+      validate.emailAddress(emailAddress),
+      validate.password(password, password)
+    ].filter(v => !!v);
+    if (validationErrors.length > 0) {
+      return raiseError(400, 'There were issues validating your input', validationErrors);
+    }
+
     // Resolve the email address given to a verified user in the
     // database.
     const user = await userModel.findOne({
