@@ -40,7 +40,7 @@
     "moment": "^2.24.0",
     "mongoose": "^5.6.8",
     "node-env-file": "^0.1.8",
-    "nodemailer": "^6.3.0",
+    "nodemailer": "^6.4.16",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "safe-html": "^1.0.0"
